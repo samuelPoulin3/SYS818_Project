@@ -82,7 +82,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.thread = QtCore.QThread()
             self.thread.start()
             info_subjects = ImportSubjects(self._subject_path)
-
+            
             self.thread.exit()
 
         else:
