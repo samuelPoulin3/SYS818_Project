@@ -1,0 +1,13 @@
+{
+    "python.analysis.extraPaths": ["./src/main/python/"],
+    "editor.rulers": [80],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#434552"
+    },
+    "qtForPython.designer.path": "C:\\Users\\sampo\\Python\\PycharmProjects\\virtual_env\\SYS818_venv\\Scripts\\designer.exe",
+    "qtForPython.uic.path": "C:\\Users\\sampo\\Python\\PycharmProjects\\virtual_env\\SYS818_venv\\Scripts\\pyuic5.exe",
+    "qtForPython.uic.args": [
+        "-o \"${workspaceFolder}${pathSeparator}${relativeFileDirname}${pathSeparator}${fileBasenameNoExtension}.py\""
+    ],
+    "qtForPython.uic.liveExecution": false
+}

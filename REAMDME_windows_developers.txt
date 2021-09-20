@@ -1,0 +1,314 @@
+# Download python 3.8.10
+https://www.python.org/downloads/windows/
+*restart*
+
+# Download visual studio code
+https://code.visualstudio.com/
+
+# Set up environement
+*Open terminal*
+# Check if pip is install:
+pip -h
+
+# If nothing show up than install pip 
+https://pip.pypa.io/en/latest/installation/
+
+# Once pip is install:
+pip install virtualenv
+C:\Users\sampo\AppData\Local\Programs\Python\Python38\python -m venv C:\Users\sampo\Python\PycharmProjects\virtual_env\SYS818_venv
+
+# To activate environment
+cd C:\Users\sampo\Python\PycharmProjects\virtual_env
+SYS818_venv\Scripts\activate
+
+# If not working try
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+
+# To deactivate
+deactivate
+
+# with virtual environnement activated
+# Install packages
+cd C:\Users\sampo\Python\PycharmProjects\SYS818_Project\SYS818\virtual_env
+pip install -r requirements.txt
+
+# Choose interpreter
+ctrl+shift+P
+Python: select interpreter
+browse file
+C:\Users\sampo\Python\PycharmProjects\virtual_env\SYS818_venv\Scripts\python.exe
+
+# Open sourcetree and github
+In sourcetree click on clone and paste link from github
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### How to distribute scinode for windows 
+
+Notes to keep in mind for the current project:
+	Python 3.9
+	Pip virtual environement for fbs
+	PyInstaller==3.4
+
+-------------------------------------------------------------------------------------------
+# Install python 3.9
+-------------------------------------------------------------------------------------------
+# Download and execute the executable installer from python.org/downloads/windows/
+
+	-> to know the exe file location
+		type "python 3.9" in the windows search
+		right click on the app found -> open file location
+		right click on the link -> open file location
+
+# Keep the python 3.9 file location
+Usually C:\Users\UserName\AppData\Local\Programs\Python\Python39
+	example : C:\Users\klacourse\AppData\Local\Programs\Python\Python39\python
+	example : C:\Users\Karine.Karine_lenov-PC\AppData\Local\Programs\Python\Python39\python    
+      
+# Once the virtual environment is created :
+C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env\scinode_win_env\Scripts\python.exe
+
+
+-------------------------------------------------------------------------------------------
+# These softwares could be needed 
+-------------------------------------------------------------------------------------------
+# Install NSIS : https://sourceforge.net/projects/nsis/
+# add the path in the environment variable C:\Program Files (x86)\NSIS
+# reboot
+
+# Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
+# make sur the path is added in the variable environments PATH
+# reboot
+
+
+*******************************************************************************************
+# Create a Pip virtual environement for scinode with fbs
+
+		scinode_win_env
+
+*******************************************************************************************
+https://www.learnpyqt.com/tutorials/packaging-pyqt5-apps-fbs/
+# *** In the windows prompt ***
+# Go where your are going to save all your virtual environments
+$ cd C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env
+# create the virtual environment with the python 3.6 path
+$ C:\Users\klacourse\AppData\Local\Programs\Python\Python36\python -m venv .\scinode_win_env
+! make sure the scinode_win_env has been created
+# activate the virtual environment
+$ call .\scinode_win_env\scripts\activate.bat
+	-> the python exe will be taken from the virtual environment afterwards
+# NOTE: In Git Bash use the command source:  source virtual_env/scinode_win_env/Scripts/activate
+(scinode_win_env) $
+# To deactivate
+(scinode_win_env) $ deactivate
+# To activate
+$ call C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env\scinode_win_env\scripts\activate.bat
+
+	-------------------------------------------------------------------------------------------
+	OPTION 1) 
+	# Install packages from the requirements_windows.txt
+	-------------------------------------------------------------------------------------------   
+	# Install all requirements
+	# go to your local repository of scinode to install requirements in the virtual environment
+	(scinode_win_env)$ cd C:\Users\klacourse\Documents\NGosselin\gitRepos\ceamscarms\Stand_alone_apps\scinodes_poc
+	(scinode_win_env)$ pip install -r virtual_env\requirements_windows.txt
+
+	-------------------------------------------------------------------------------------------
+	OPTION 2) 
+	# Install all needed packages manually in the virtual environment
+	-------------------------------------------------------------------------------------------   
+	(scinode_win_env) $ pip3 install fbs PyQt5 PyInstaller==3.4
+	(scinode_win_env) $ pip3 install numpy
+	(scinode_win_env) $ pip3 install pywin32
+	(scinode_win_env) $ pip3 install pandas
+	(scinode_win_env) $ pip3 install pyedflib
+	(scinode_win_env) $ pip3 install matplotlib
+	(scinode_win_env) $ pip3 install scipy
+	(scinode_win_env) $ pip3 install ascii_canvas
+	(scinode_win_env) $ pip3 install PyQtWebEngine
+	(scinode_win_env) $ pip3 install pyuic5-tool
+	(scinode_win_env) $ pip3 install PyQt5Designer
+	(scinode_win_env) $ pip3 install sklearn
+	(scinode_win_env) $ pip3 install mdp
+	(scinode_win_env) $ pip3 install tqdm
+
+
+	# Create the requirements_windows.txt
+	# go to your local repository of scinode
+	(scinode_win_env) $ cd C:\Users\klacourse\Documents\NGosselin\gitRepos\ceamscarms\Stand_alone_apps\scinodes_poc
+	(scinode_win_env) $ pip3 freeze > virtual_env\requirements_windows.txt
+
+
+
+-------------------------------------------------------------------------------------------
+# Update your scinode repository 
+-------------------------------------------------------------------------------------------
+-> to clone the repository and create your branch see scinode_git4win.txt
+# Launch Git Bash
+# Go to your scinode repository
+$ cd /c/Users/klacourse/Documents/NGosselin/gitRepos/ceamscarms/Stand_alone_apps/scinodes_poc
+# Run get_master_changes_on_feature_branch.sh
+$ ./get_master_changes_on_feature_branch.sh
+! make sure you are up to date
+
+# When you do modifs to the MainWindow.py and you don't want it to be pushed
+$ git stash push src/main/python/MainWindow.py
+$ git add./commit/push...
+$ git stash pop
+
+
+# How to vim
+--------------       
+save: :w
+save and exit: :wq
+exit: :q
+
+
+
+*******************************************************************************************
+		Use scinode_win_env
+*******************************************************************************************
+# *** In the windows prompt ***
+# Activate scinode_win_env
+$ call C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env\scinode_win_env\scripts\activate.bat
+# Go to your scinode repository
+(scinode_win_env) $ cd C:\Users\klacourse\Documents\NGosselin\gitRepos\ceamscarms\Stand_alone_apps\scinodes_poc
+# To run the scinode app without vscode
+(scinode_win_env) $ fbs run
+
+## You don't need to create the installer for now!
+	# To create the installer to distrbute
+	(scinode_win_env) $ fbs freeze
+	-> if the target exe does not work properly
+	(scinode_win_env) $ fbs clean
+	(scinode_win_env) $ fbs freeze --debug
+	(scinode_win_env) $ fbs installer
+
+
+
+-------------------------------------------------------------------------------------------
+# Configure visual studio code for scinode
+
+!!! TO DO only once
+------------------------------------------------------------------------------------------- 
+# Download, install and launch visual studio code
+
+# Remove the .vscode/launch.json and .vscode/setting.json
+
+# Open folder to the scinode repository
+
+# Install python extension
+click on python in the low blue line 
+
+# Select python interpreter (click on the low blue line)
+Select "scinode_conda_env"
+! Note: if not available, pick the choice to find it manually and navigate within the virtual_env folder you create previsouly to find the python.exe file.
+
+# Modify the .vscode/launch.json and .vscode/setting.json
+
+# To know the paths of the exe
+# In the windows command prompt
+# Activate scinode_win_env
+$ call C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env\scinode_win_env\scripts\activate.bat
+(scinode_win_env) $ where designer
+(scinode_win_env) $ where pyuic5
+
+# launch.json:
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Main",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\klacourse\\Documents\\NGosselin\\gitRepos\\ceamscarms\\Stand_alone_apps\\scinodes_poc\\src\\main\\python\\main.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}
+
+# settings.json:
+{
+    "python.pythonPath": "C:\\Users\\klacourse\\Documents\\NGosselin\\technical\\python\\virtual_env\\scinode_win_env\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.extraPaths": ["./src/main/python/"],
+    "editor.rulers": [80],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#434552"
+    },
+    "qtForPython.designer.path": "C:\\Users\\klacourse\\Documents\\NGosselin\\technical\\python\\virtual_env\\scinode_win_env\\Scripts\\designer.exe",
+    "qtForPython.uic.path": "C:\\Users\\klacourse\\Documents\\NGosselin\\technical\\python\\virtual_env\\scinode_win_env\\Scripts\\pyuic5.exe",
+    "qtForPython.uic.args": [
+        "-o \"${workspaceFolder}${pathSeparator}${relativeFileDirname}${pathSeparator}${fileBasenameNoExtension}.py\""
+    ],
+	"qtForPython.uic.liveExecution": false,
+}
+
+
+# ---------------------------------------------
+# To see error in the code before running
+# ---------------------------------------------
+# Install the plugin Pylance
+
+
+# ---------------------------------------------
+# To modify/update UI
+# ---------------------------------------------
+# Install the plugin: Qt For Python
+right click on the UI_x.ui -> edit form
+right click on the UI_x.ui -> compile form
+
+
+######################################################################
+# Problem with fbs installator
+######################################################################
+should all be fixed when fbs pro will be used.
+	
+\bindepend.py not fixed in pyinstaller 3.4
+
+	File "c:\users\klacourse\documents\ngosselin\technical\python\virtual_env\scinode_win_env\lib\site-packages\PyInstaller\depend\bindepend.py", line 129, in _getImports_pe
+    	dll, _ = forwarder.split('.')
+	ValueError: too many values to unpack (expected 2)
+
+	known issue:
+	fixe here:
+	https://github.com/pyinstaller/pyinstaller/issues/5138
+
+	C:\Users\klacourse\Documents\NGosselin\technical\python\virtual_env\scinode_win_env\Lib\site-packages\PyInstaller\depend\bindepend.py
+	dll = forwarder.split('.')[0]
+                                 
+
+The webengine does not work properly, it was turned off in the last try
+
+The dynamic load of the plugins does not work in the installator
+
+Check to detect events when the activity exceeds the threshold, otherwise it's when the activity goes below the threshold.
+
+
+                                                                                                                                                                                                                       
