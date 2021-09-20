@@ -41,6 +41,29 @@ C:\Users\sampo\Python\PycharmProjects\virtual_env\SYS818_venv\Scripts\python.exe
 # Open sourcetree and github
 In sourcetree click on clone and paste link from github
 
+# Create a branch
+$ git branch samuel
+$ git checkout samuel
+
+# Push your new branch
+$ git stash push src/main/python/MainWindow.py # Making sure it doesn't erase my copy
+$ git add . --all
+$ git commit
+$ git push --set-upstream origin samuel
+
+# Switch to the master branch and make sure you are up to date:
+$ git checkout master
+$ git fetch
+$ git pull
+
+$ git checkout samuel
+$ git stash pop
+
+# Normal push
+$ git add . --all
+$ git commit
+$ git push
+
 
 
 
