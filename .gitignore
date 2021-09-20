@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+#build/
 develop-eggs/
 dist/
 downloads/
@@ -124,6 +124,8 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+launch.json
+settings.json
 
 # Pyre type checker
 .pyre/
