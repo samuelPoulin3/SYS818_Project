@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from commons import ScanModel
+from collections import defaultdict
 
 DEBUG = False
 
@@ -68,7 +69,7 @@ class SubjectModel():
         self.n_wbv = None
         self.asf = None
         self.delay = None
-        self.scans = []
+        self.scans = defaultdict()
 
     def clone(self, clone_samples=False):
         subject = SubjectModel()

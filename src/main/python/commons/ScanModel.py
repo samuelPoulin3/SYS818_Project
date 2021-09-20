@@ -26,11 +26,14 @@ class ScanModel():
             ti: Float
                 ? in ms.
             flip: Int
+                ?
+            image:
+
 
 
             
     """
-    __slots__ = ('scan_number', 'scan_type', 'vox_res', 'rect_fov', 'orientation', 'tr', 'te', 'ti', 'flip')
+    __slots__ = ('scan_number', 'scan_type', 'vox_res', 'rect_fov', 'orientation', 'tr', 'te', 'ti', 'flip', 'image')
     def __init__(self, *args, **kwargs):
         self.scan_number = None
         self.scan_type = None
@@ -41,3 +44,4 @@ class ScanModel():
         self.te = None
         self.ti = None
         self.flip = None
+        self.image = None

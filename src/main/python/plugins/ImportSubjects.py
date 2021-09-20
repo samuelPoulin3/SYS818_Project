@@ -6,6 +6,8 @@ import os
 import subprocess
 from PyQt5 import QtWidgets
 from tqdm import tqdm
+from collections import defaultdict
+from PIL import Image
 from commons.SubjectModel import SubjectModel
 from commons.ScanModel import ScanModel
 
@@ -22,14 +24,14 @@ class ImportSubjects():
 
         Returns
         -----------    
-            subjects: List
-                List of all subjects and their scans info
+            subjects: Dict
+                Dict of all subjects and their scans info
     """
     def __init__(self, subject_path, **kwargs):
         super().__init__(**kwargs)
         if DEBUG: print('ImportSubject.__init__')
         self._subject_path = subject_path
-        self.subjects = []
+        self.subjects = defaultdict()
         self.compute(self._subject_path)
 
     def compute(self, path):
@@ -52,6 +54,7 @@ class ImportSubjects():
         if path is not None:
             try :
                 subjects_folder = os.listdir(path)
+                subjects = self.subjects
 
                 # Set progress bar
                 total_event = len(subjects_folder)
@@ -62,7 +65,7 @@ class ImportSubjects():
                     subject_model = SubjectModel()
                     filename = path + "/" + subject + "/" + subject + ".txt"
                     f = open(filename, "r")
-                    index_scan = -1
+                    index_scan = ''
                     for line in f:
                         # Get informations from subjects
                         if line.startswith("SESSION ID:"):
@@ -124,11 +127,11 @@ class ImportSubjects():
                         
                         # Get informations from scans
                         if line.startswith("SCAN NUMBER:"):
-                            index_scan += 1
                             scan_number = line.split(':')
                             scan_model = ScanModel()
                             if not scan_number[1].strip() == '':
-                                subject_model.scans.append(scan_model)
+                                index_scan = scan_number[1].strip()
+                                subject_model.scans[index_scan] = scan_model
                                 subject_model.scans[index_scan].scan_number = scan_number[1].strip()
 
                         if line.startswith("TYPE:"):
@@ -172,11 +175,25 @@ class ImportSubjects():
                                 subject_model.scans[index_scan].flip = int(flip[1].strip())
 
                     f.close()
-                    self.subjects.append(subject_model)
+
+                    # Import images
+                    imgs_folder_path = path + "/" + subject + "/RAW"
+                    imgs_folder = os.listdir(imgs_folder_path)
+                    images = [img for img in imgs_folder if '.gif' in img]
+                    if not len(images) == len(subject_model.scans):
+                        err_message = "Warning ImportSubjects {}: there is less images than scans done".format(subject)
+                        print(err_message)
+                    for scan in subject_model.scans:
+                        image = [img for img in images if scan in img]
+                        img_folder_path = imgs_folder_path + '/' + image[0]
+                        subject_model.scans[scan].image = Image.open(img_folder_path)
+
+                    subjects[subject] = subject_model
+
                     pbar.update(1)
                 pbar.close
                 return {
-                    'subjects': self.subjects
+                    'subjects': subjects
                 }
 
             except Exception as e:
