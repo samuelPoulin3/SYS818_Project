@@ -187,7 +187,7 @@ class ImportSubjects():
                         image = [img for img in images if scan in img]
                         img_folder_path = imgs_folder_path + '/' + image[0]
                         subject_model.scans[scan].image = Image.open(img_folder_path)
-
+                        subject_model.scans[scan].pixels = np.array(subject_model.scans[scan].image)
                     subjects[subject] = subject_model
 
                     pbar.update(1)

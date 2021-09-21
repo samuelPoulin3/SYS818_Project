@@ -29,11 +29,13 @@ class ScanModel():
                 ?
             image:
 
+            pixels:
+
 
 
             
     """
-    __slots__ = ('scan_number', 'scan_type', 'vox_res', 'rect_fov', 'orientation', 'tr', 'te', 'ti', 'flip', 'image')
+    __slots__ = ('scan_number', 'scan_type', 'vox_res', 'rect_fov', 'orientation', 'tr', 'te', 'ti', 'flip', 'image', 'pixels')
     def __init__(self, *args, **kwargs):
         self.scan_number = None
         self.scan_type = None
@@ -45,3 +47,4 @@ class ScanModel():
         self.ti = None
         self.flip = None
         self.image = None
+        self.pixels = None
