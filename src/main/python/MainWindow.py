@@ -12,7 +12,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileSystemModel, QFileDialog
 from plugins.ImportSubjects import ImportSubjects
 from ui.Ui_MainWindow import Ui_MainWindow
-
+from plugins.ScanShow import ScanShow
+from collections import defaultdict
 
 DEBUG = False
 
@@ -82,7 +83,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.thread = QtCore.QThread()
             self.thread.start()
             info_subjects = ImportSubjects(self._subject_path)
-            
+            #ScanShow(info_subjects)
             self.thread.exit()
 
         else:
