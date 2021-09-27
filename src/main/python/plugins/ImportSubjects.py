@@ -11,7 +11,7 @@ from PIL import Image
 from commons.SubjectModel import SubjectModel
 from commons.ScanModel import ScanModel
 
-DEBUG = True
+DEBUG = False
 
 class ImportSubjects():
     """
@@ -64,7 +64,13 @@ class ImportSubjects():
                 for subject in subjects_folder:
                     subject_model = SubjectModel()
                     filename = path + "/" + subject + "/" + subject + ".txt"
-                    f = open(filename, "r")
+                    try:
+                        f = open(filename, "r")
+                    except Exception as e:
+                        err_message = "ERROR in Import: {} does not exist. {}".format(filename, e)
+                        print(err_message)
+                        continue
+                    
                     index_scan = ''
                     for line in f:
                         # Get informations from subjects

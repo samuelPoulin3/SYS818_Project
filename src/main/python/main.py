@@ -9,7 +9,7 @@ class ClassificationAlgorithm(ApplicationContext):
         window = MainWindow()
         version = self.build_settings['version']
         window.setWindowTitle("Classification algorithm - V" + version)
-        window.resize(500, 700)
+        window.resize(500, 100)
         window.show()
         return self.app.exec_()
 
