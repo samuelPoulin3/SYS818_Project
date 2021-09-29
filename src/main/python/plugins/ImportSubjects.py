@@ -26,12 +26,14 @@ class ImportSubjects():
         -----------    
             subjects: Dict
                 Dict of all subjects and their scans info
+            nb_images: int
     """
     def __init__(self, subject_path, **kwargs):
         super().__init__(**kwargs)
         if DEBUG: print('ImportSubject.__init__')
         self._subject_path = subject_path
         self.subjects = defaultdict()
+        self.nb_images = 0
         self.compute(self._subject_path)
 
     def compute(self, path):
@@ -55,7 +57,7 @@ class ImportSubjects():
             try :
                 subjects_folder = os.listdir(path)
                 subjects = self.subjects
-
+                
                 # Set progress bar
                 total_event = len(subjects_folder)
                 desc = 'Uploading data...'
@@ -190,28 +192,32 @@ class ImportSubjects():
                         err_message = "Warning ImportSubjects {}: there is less images than scans done".format(subject)
                         print(err_message)
                     for scan in subject_model.scans:
+                        self.nb_images += 1
                         image = [img for img in images if scan in img]
                         img_folder_path = imgs_folder_path + '/' + image[0]
                         subject_model.scans[scan].image = Image.open(img_folder_path)
-                        subject_model.scans[scan].pixels = np.array(subject_model.scans[scan].image)
+                        subject_model.scans[scan].pixels = subject_model.scans[scan].img2pix(subject_model.scans[scan].image)
                     subjects[subject] = subject_model
 
                     pbar.update(1)
                 pbar.close
                 return {
-                    'subjects': subjects
+                    'subjects': subjects,
+                    'nb_images': self.nb_images
                 }
 
             except Exception as e:
                 err_message = "ERROR: {}".format(e)
                 print(err_message)
                 return {
-                    'subjects': ''
+                    'subjects': '',
+                    'nb_images': ''
                 }                 
         else:
             err_message = "ERROR: path not initialized"
             print(err_message)    
 
         return {
-            'subjects': ''
+            'subjects': '',
+            'nb_images': ''
         }          

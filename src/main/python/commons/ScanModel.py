@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+import numpy as np
+from PIL import Image
+
+
 DEBUG = False
 
 class ScanModel():
@@ -48,3 +52,13 @@ class ScanModel():
         self.flip = None
         self.image = None
         self.pixels = None
+
+    def pix2img(self, pixel_array, save = False, img_name = 'rename_me.png'):
+        new_im = Image.fromarray(pixel_array)
+        if save:
+            new_im.save(img_name)
+        return new_im
+
+    def img2pix(self, image):
+        return np.array(image)
+
