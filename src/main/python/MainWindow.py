@@ -17,6 +17,8 @@ from ui.Ui_MainWindow import Ui_MainWindow
 from plugins.ScanShow.ScanShow import ScanShow
 from collections import defaultdict
 from PyQt5.QtWidgets import QTableWidgetItem
+from commons.Models import Models
+from plugins import layers
 
 DEBUG = False
 
@@ -255,10 +257,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.labels_test = np.array(self.labels_test).reshape((subjects_test, len(self.labels)))
 
-        self.preprocessing(self.data_train, self.labels_train, self.data_test, self.labels_test)
+        self.compile_model(self.data_train, self.labels_train, self.data_test, self.labels_test)
 
-    def preprocessing(self, data_train, labels_train, data_test, labels_test):
-        show_images = ScanShow(self.info_subjects, self.use_train, self.data_train)
+    def compile_model(self, data_train, labels_train, data_test, labels_test):
+        model = Models()
+        #model.add(layers.Registration())
+        model.add(layers.Gauss2D(shape=(3,3),sigma=0.85))
+        model.add(layers.FeatExtract())
+        #model.add(layers.Conv2D(shape=(5,5),sigma=0.8))
+        #model.add(layers.MaxPooling2D(shape=(9,9),sigma=1.2))
+        
+
+        model.fit(data_train, labels_train, epochs=self.number_epochs, batch_size=self.batch_size)
+
+        #show_images = ScanShow(self.info_subjects, self.use_train, self.data_train)
+        show_images = ScanShow(self.info_subjects, self.use_train, model.new_mat['Gauss2D'])
         show_images.show()
         self._end_multithread()
 
