@@ -60,8 +60,9 @@ $ git checkout samuel
 $ git stash pop
 
 # Normal push
+$ git stash push src/main/python/MainWindow.py 
 $ git add . --all
-$ git commit
+$ git commit -m "my message"
 $ git push
 
 
