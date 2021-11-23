@@ -52,11 +52,13 @@ $ git commit
 $ git push --set-upstream origin samuel
 
 # Switch to the master branch and make sure you are up to date:
+$ git stash --all
 $ git checkout master
 $ git fetch
 $ git pull
 
 $ git checkout samuel
+$ git rebase master
 $ git stash pop
 
 # Normal push

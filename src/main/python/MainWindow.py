@@ -19,6 +19,11 @@ from collections import defaultdict
 from PyQt5.QtWidgets import QTableWidgetItem
 from commons.Models import Models
 from plugins import layers
+from concurrent import futures
+from multiprocessing import Manager, Process
+import queue
+import threading
+import time
 
 DEBUG = False
 
@@ -38,7 +43,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Init internal variables
         self._subject_path = None
-        self._use_multithread = True
 
     def on_new(self):
         """
@@ -82,9 +86,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Blabla
         """
         self._subject_path = self.subjects_path_lineEdit.text()
-        if self._use_multithread:
-            self._start_multithread()
         self.info_subjects = ImportSubjects(self._subject_path)
+
+        # QtDesigner show second section
         self.prepare_dataset.setVisible(True)
         self.subjects_found_lineEdit.setText(str(self.info_subjects.nb_images))            
 
@@ -98,7 +102,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.number_epochs = self.number_epochs_spinBox.value()
         self.batch_size = self.batch_size_spinBox.value()
 
-        self.label_table = {}
         self.label_table = {'Male': 0.0,
                             'Female': 1.0,
                             'Right': 0.0,
@@ -177,7 +180,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     break
         
         self.data_train = np.array(self.data_train).reshape((subjects_train, 256, 256, 1))
-        self.data_train = self.data_train.astype('float32') / 255
+        self.data_train = self.data_train.astype('float32') / np.array([255])
 
         self.labels_train = np.array(self.labels_train).reshape((subjects_train, len(self.labels)))
 
@@ -253,27 +256,57 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     break
 
         self.data_test = np.array(self.data_test).reshape((subjects_test, 256, 256, 1))
-        self.data_test = self.data_test.astype('float32') / 255
+        self.data_test = self.data_test.astype('float32') / np.array([255])
 
         self.labels_test = np.array(self.labels_test).reshape((subjects_test, len(self.labels)))
 
         self.compile_model(self.data_train, self.labels_train, self.data_test, self.labels_test)
 
     def compile_model(self, data_train, labels_train, data_test, labels_test):
+        # First smooth
+        sigma_0_1 = 1.6
+        shape_0_1 = (3,3)
+
+        # First octave
+        # Best sampling frequency
+        s = 3
+        k = 2 ** (1/s)
+
+        shape_1_1 = (3,3)
+        sigma_1_1 = k * sigma_0_1
+        
+        shape_1_2 = (3,3)
+        sigma_1_2 = k * sigma_1_1
+        
+        shape_1_3 = (3,3)
+        sigma_1_3 = k * sigma_1_2
+        
+        shape_1_4 = (3,3)
+        sigma_1_4 = k * sigma_1_3
+        
+
         model = Models()
-        #model.add(layers.Registration())
-        model.add(layers.Gauss2D(shape=(3,3),sigma=0.85))
-        model.add(layers.FeatExtract())
-        #model.add(layers.Conv2D(shape=(5,5),sigma=0.8))
-        #model.add(layers.MaxPooling2D(shape=(9,9),sigma=1.2))
+        # Add first smooth
+        model.add(layers.Gauss2D(shape_0_1, sigma_0_1))
+
+        # Add first octave
+        model.add(layers.Gauss2D(shape_1_1, sigma_1_1))
+        model.add(layers.Gauss2D(shape_1_2, sigma_1_2))
+        model.add(layers.Gauss2D(shape_1_3, sigma_1_3))
+        model.add(layers.Gauss2D(shape_1_4, sigma_1_4))
+
+        model.add(layers.GaussDiff([shape_1_1, shape_1_2, shape_1_3, shape_1_4],
+                                   [sigma_1_1, sigma_1_2, sigma_1_3, sigma_1_4]))
+
+        #model.add(layers.FeatExtract())
         
 
         model.fit(data_train, labels_train, epochs=self.number_epochs, batch_size=self.batch_size)
 
         #show_images = ScanShow(self.info_subjects, self.use_train, self.data_train)
-        show_images = ScanShow(self.info_subjects, self.use_train, model.new_mat['Gauss2D'])
+        show_images = ScanShow(self.info_subjects, self.use_train, self.data_train, model.new_mat)
         show_images.show()
-        self._end_multithread()
+        a = 1
 
     def on_stop(self):
         """ Blabla """
@@ -282,11 +315,3 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def quit(self):
         """ quit the app """
         sys.exit()
-
-    def _start_multithread(self):
-        # Setup and start the worker thread to avoid blocking the pyqt GUI
-        self.thread = QtCore.QThread()
-        self.thread.start()
-
-    def _end_multithread(self):
-        self.thread.exit()

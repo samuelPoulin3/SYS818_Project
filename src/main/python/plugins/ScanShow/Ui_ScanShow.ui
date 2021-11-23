@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1596</width>
+    <width>1189</width>
     <height>1022</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
     <rect>
      <x>20</x>
      <y>30</y>
-     <width>1334</width>
+     <width>1151</width>
      <height>261</height>
     </rect>
    </property>
@@ -60,36 +60,10 @@
             <property name="verticalSpacing">
              <number>0</number>
             </property>
-            <item row="2" column="2">
-             <widget class="QPushButton" name="back_subject_pushButton">
+            <item row="3" column="3">
+             <widget class="QPushButton" name="next_scan_pushButton">
               <property name="text">
-               <string>&lt;&lt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QPushButton" name="back_scan_pushButton">
-              <property name="text">
-               <string>&lt;&lt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>50</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Subject</string>
+               <string>&gt;&gt;</string>
               </property>
              </widget>
             </item>
@@ -97,25 +71,6 @@
              <widget class="QPushButton" name="next_subject_pushButton">
               <property name="text">
                <string>&gt;&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>50</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Scan</string>
               </property>
              </widget>
             </item>
@@ -138,6 +93,74 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QComboBox" name="scan_comboBox"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Subject</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Scan</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QPushButton" name="back_scan_pushButton">
+              <property name="text">
+               <string>&lt;&lt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QPushButton" name="back_subject_pushButton">
+              <property name="text">
+               <string>&lt;&lt;</string>
               </property>
              </widget>
             </item>
@@ -170,8 +193,18 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="4">
-             <spacer name="horizontalSpacer_3">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Layer</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QComboBox" name="layer_comboBox"/>
+            </item>
+            <item row="4" column="4">
+             <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -182,16 +215,6 @@
                </size>
               </property>
              </spacer>
-            </item>
-            <item row="3" column="1">
-             <widget class="QComboBox" name="scan_comboBox"/>
-            </item>
-            <item row="3" column="3">
-             <widget class="QPushButton" name="next_scan_pushButton">
-              <property name="text">
-               <string>&gt;&gt;</string>
-              </property>
-             </widget>
             </item>
            </layout>
           </item>
@@ -848,7 +871,7 @@
   <widget class="QGraphicsView" name="result_layout">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>80</x>
      <y>300</y>
      <width>991</width>
      <height>711</height>
@@ -1014,6 +1037,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>layer_comboBox</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>ScanShow</receiver>
+   <slot>on_layer_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>9</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_new()</slot>
@@ -1036,5 +1075,6 @@
   <slot>on_subject_changed()</slot>
   <slot>on_scan_changed()</slot>
   <slot>_on_changed_view()</slot>
+  <slot>on_layer_changed()</slot>
  </slots>
 </ui>

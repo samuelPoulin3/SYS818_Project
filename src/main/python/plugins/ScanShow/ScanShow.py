@@ -22,7 +22,7 @@ class ScanShow(QtWidgets.QWidget, QtWidgets.QGraphicsScene, Ui_ScanShow):
     """
         ScanShow display the events list read
     """
-    def __init__(self, info_subjects, subjects, images_as_array, *args, **kwargs):
+    def __init__(self, info_subjects, subjects, data_train, steps_mat, *args, **kwargs):
         super(ScanShow, self).__init__(*args, **kwargs)
 
         # Set up the user interface from Designer.
@@ -32,10 +32,16 @@ class ScanShow(QtWidgets.QWidget, QtWidgets.QGraphicsScene, Ui_ScanShow):
         self.subjects = subjects
         self.index_subject = 0
         self.subject = self.subjects[self.index_subject]
-        self.images_as_array = images_as_array
+        self.steps_mat = steps_mat
+        self.data_train = data_train
+        self.images_as_array = self.data_train
 
         for key in self.subjects:
             self.subject_comboBox.addItem(key)
+
+        self.layer_comboBox.addItem('Original')
+        for key in self.steps_mat:
+            self.layer_comboBox.addItem(key)
 
         self.scans = list(self.info_subjects[self.subject].scans.keys())
         self.index_scan = 0
@@ -112,6 +118,13 @@ class ScanShow(QtWidgets.QWidget, QtWidgets.QGraphicsScene, Ui_ScanShow):
         
         self._on_navigate_scan()
 
+    def on_layer_changed(self):
+        if self.layer_comboBox.currentText() == 'Original':
+            self.images_as_array = self.data_train
+        else:
+            self.images_as_array = self.steps_mat[self.layer_comboBox.currentText()]
+        self._show_image()
+
     def _show_image( self):
         if hasattr(self, 'scene'):
             # Manage the figure
@@ -126,7 +139,10 @@ class ScanShow(QtWidgets.QWidget, QtWidgets.QGraphicsScene, Ui_ScanShow):
                 if sub == self.subject and sc == self.scan:
                         break
 
-            img = Image.fromarray(np.uint8(np.reshape(self.images_as_array[index_array],(256,256)) * 255) , 'L')
+            if self.images_as_array[index_array].shape[2] == 3:
+                img = Image.fromarray(self.images_as_array[index_array].astype("uint8") , "RGB")
+            else:
+                img = Image.fromarray(np.uint8(np.reshape(self.images_as_array[index_array],(256,256)) * 255) , 'L')
             w, h = img.size
             view_size = self.result_layout.size()
             ratio = min(view_size.width()/w, view_size.height()/h)
