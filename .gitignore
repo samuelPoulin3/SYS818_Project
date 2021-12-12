@@ -129,3 +129,6 @@ settings.json
 
 # Pyre type checker
 .pyre/
+
+# Data
+*.pkl
