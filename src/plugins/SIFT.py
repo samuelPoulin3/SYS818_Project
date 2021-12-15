@@ -7,6 +7,7 @@ from PIL import Image
 from itertools import compress
 import warnings
 
+# Warning with dividing by 0 to find orientation
 warnings.filterwarnings("ignore")
 
 DEBUG = False
