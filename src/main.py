@@ -8,9 +8,8 @@ from tqdm import tqdm
 import concurrent.futures
 import numpy as np
 import pandas as pd
-import pickle
 from sklearn.cluster import KMeans
-from PIL import Image
+from sklearn.metrics import confusion_matrix
 
 DEBUG = True
 
@@ -128,36 +127,28 @@ if __name__ == '__main__':
         test_data_clusters = pd.concat(test_data_clusters).to_numpy().astype(float)
         label_test_clusters = [test_data[key][test_data[key]['kmeans_label'] == i]['image_label'].values for key in list(test_data.keys())]
         label_test_clusters = np.reshape(np.hstack((label_test_clusters)), (len(test_data_clusters),1))
-        n_features = test_data_clusters.shape[1]
         key_name = 'clusters_' + str(i)
         clusters_test_labels[key_name] = label_test_clusters
-        clusters_test[key_name] = clusters[key_name].model.predict(test_data_clusters, verbose=1)
+        clusters_test[key_name] = np.argmax(clusters[key_name].model.predict(test_data_clusters, verbose=1), axis = 1)
         # cm = (confusion_matrix(np.argmax(clusters_test[key_name],axis=1), np.argmax(clusters_test[key_name],axis=1)))
         # self.plot_confusion_matrix(cm, None, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues)
-    text_label='ROC CNN'
-    plot_roc(clusters_test_labels, clusters_test, text_label)
+    
+    plot_roc(clusters_test_labels, clusters_test)
     index = {}
+    new_labels = {}
+    weights_labels = {}
     for key in list(test_data.keys()):
         test_data[key]['predicted_label'] = 0
-        index[key] = test_data[key].index
-    for i in range(kmeans.n_clusters):
-        condition = [test_data[key]['kmeans_label'] == i for key in list(test_data.keys())]
-        kmeans_label_indices = index[condition]
-        kmeans_indices_list = kmeans_label_indices.tolist()
-        test_data.loc[kmeans_indices_list,'predicted_label'] = clusters_test[list(clusters_test.keys())[i]]
-    
-    image_cluster = np.zeros((kmeans.n_clusters,1))
-    vec_pred_label = []
-    for i in range(np.max(test_data['image_no'].to_numpy())):
-        image_all_clusters = test_data[test_data['image_no'] == i]
-        for j in range(kmeans.n_clusters):
-            image_cluster[j] = np.sum(image_all_clusters[image_all_clusters['kmeans_label'] == j]['predicted_label'].values)
-        vec_pred_label.append(image_cluster)
-
-    new_label = np.zeros((len(vec_pred_label),1))
-    for i in range(len(vec_pred_label)):
-        new_label[i] = np.dot(np.reshape(vec_pred_label[i],(1,kmeans.n_clusters)),weights_acc)
-
+        index[key] = np.arange(len(test_data[key]))
+        vec_pred_label = []
+        for i in range(kmeans.n_clusters):
+            condition = np.array(test_data[key]['kmeans_label'] == i)
+            kmeans_label_indices = index[key][condition]
+            kmeans_indices_list = kmeans_label_indices.tolist()
+            test_data[key].loc[kmeans_indices_list,'predicted_label'] = clusters_test[list(clusters_test.keys())[i]][kmeans_indices_list]
+            vec_pred_label.append(np.sum(clusters_test[list(clusters_test.keys())[i]][kmeans_indices_list]))
+        weights_labels[key] = np.reshape(vec_pred_label,(kmeans.n_clusters,1)) * weights_acc
+        new_labels[key] = np.sum(weights_labels[key]) / np.sum(weights_acc)
 
     #model_clustering = Models_Clustering(kmeans)
     # import numpy as np

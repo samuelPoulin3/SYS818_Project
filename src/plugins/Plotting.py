@@ -36,21 +36,17 @@ def plot_confusion_matrix(cm, classes,
     plt.show()
     
     
-def plot_roc(y_test, y_pred, text_label):
-
+def plot_roc(y_test, y_pred):
+    plt.figure(figsize=(7,7))
     for key in list(y_test.keys()):
         fpr, tpr, _ = roc_curve(y_test[key][:, 0], y_pred[key][:, 0])
         roc_auc = auc(fpr, tpr)
-        
-        plt.figure(figsize=(7,7))
         lw=2
-        alpha=1
-        plt.plot([0,1],[0,1],linestyle = '--',lw = 2,color = 'black')
-        plt.plot(fpr, tpr, 
-                label= text_label+r' (AUC = %0.2f )' % (roc_auc),lw=lw, alpha=alpha)
-
+        alpha=1  
+        plt.plot(fpr, tpr, label= key+r' (AUC = %0.2f )' % (roc_auc),lw=lw, alpha=alpha)
+    plt.plot([0,1],[0,1],linestyle = '--',lw = 2,color = 'black')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('ROC Male-Female Classification')
+    plt.title('ROC Dementia Classification')
     plt.legend(loc="lower right")
     plt.show()

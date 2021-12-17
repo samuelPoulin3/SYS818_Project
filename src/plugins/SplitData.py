@@ -1,7 +1,4 @@
 import numpy as np
-import pandas as pd
-from scipy.sparse import csr_matrix, vstack
-from PIL import Image
 
 DEBUG = False
 

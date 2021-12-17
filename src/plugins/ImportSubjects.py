@@ -1,5 +1,4 @@
 #! /usr/bin/env python3
-
 import numpy as np
 import pandas as pd
 import os
@@ -10,6 +9,21 @@ from PIL import Image
 DEBUG = False
 
 def Import_Subjects(data_path, label_path):
+    """
+        Import every subject available
+
+        Input:
+            data_path: Str
+                Path of the folders with the subjects
+            label_path: Str
+                Path of the csv file with the labels
+        Output:
+            Dictionnary with key:
+                data: Dict
+                    All subject image as csr_matrix
+                label: DataFrame
+                    Pandas DataFrame with all labels
+    """
     try:
         # Get labels
         labels = pd.read_csv(label_path)

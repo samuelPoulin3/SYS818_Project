@@ -12,6 +12,7 @@ warnings.filterwarnings("ignore")
 
 DEBUG = False
 
+# --------------------------------- STATIC METHOD ------------------------------
 def matlab_style_gauss2D(shape=(3,3),sigma=1):
     """
     https://stackoverflow.com/questions/17190649/how-to-obtain-a-gaussian-filter-in-python
@@ -97,22 +98,116 @@ def Gauss_compute(image, neighbors_idx, filter_idx, size, shape, flag):
 
     dogs = [dog_1,dog_2,dog_3]
     return gaussian, dogs
-
-def using_complex(a):
-    weight = 1j*np.linspace(0, a.shape[1], a.shape[0], endpoint=False)
-    b = a + weight[:, np.newaxis]
-    u, ind = np.unique(b, return_index=True)
-    b = np.zeros_like(a)
-    np.put(b, ind, a.flat[ind])
-    return b
     
 class SIFT_Implementation():
     """
-        The model of our keypoints
-        The properties are:
-            images: Dict of the images as sparse matrix 
-    """
+        SIFT method to find keypoints in an image
 
+        Input:
+            images: csr_matrix
+                Image as an array of intensity greyscale
+            key: Str
+                Subject name
+            og_size: Tuple (n x m)
+                Size of the image
+        Property:
+            n: int
+                Number of rows of the image
+            m: int
+                Number of columns of the image
+            key: Str
+                Name of the image
+            images_1oct: csr_matrix
+                Image for the 1st octave
+            images_2oct: csr_matrix
+                Image for the 2nd octave
+            images_3oct: csr_matrix
+                Image for the 3rd octave
+            sigma: float
+                Value of sigma
+            neighbors_2D_1: csr_matrix
+                Matrix of index value for each neighbor for the 1st octave
+            neighbors_2D_2: csr_matrix
+                Matrix of index value for each neighbor for the 2nd octave
+            neighbors_2D_3: csr_matrix
+                Matrix of index value for each neighbor for the 3rd octave
+            gaussian_filter: array
+                Values of the gaussian filter
+            gaussian_1: csr_matrix
+                Gaussian values for the 1st octave
+            gaussian_2: csr_matrix
+                Gaussian values for the 2nd octave
+            gaussian_3: csr_matrix
+                Gaussian values for the 3rd octave
+            dogs_1: csr_matrix
+                Difference of gaussian values for the 1st octave
+            dogs_2: csr_matrix
+                Difference of gaussian values for the 2nd octave
+            dogs_3: csr_matrix
+                Difference of gaussian values for the 3rd octave
+            threshold: Float
+                Threshold of the intensity to get keypoints
+            xy_coord: Array (nx2)
+                Coordinate of all keypoints
+            xy_coord_1: Array (nx2)
+                Coordinate of the 1st octave
+            xy_coord_2: Array (nx2)
+                 Coordinate of the 2nd octave
+            xy_coord_3: Array (nx2)
+                 Coordinate of the 3rd octave
+            gauss_1: csr_matrix
+                Value au gaussian for the orientation for the 1st octave
+            gauss_2: csr_matrix
+                Value au gaussian for the orientation for the 2nd octave
+            gauss_3: csr_matrix
+                Value au gaussian for the orientation for the 3rd octave
+            sigmas: Float
+                Value of sigma for the filter
+            sigmas_1: Float
+                Value of sigma for the filter for the 1st octave
+            sigmas_2: Float
+                Value of sigma for the filter for the 2nd octave
+            sigmas_3: Float
+                Value of sigma for the filter for the 3rd octave
+            magnitude: csr_matrix
+                Magnitude for all keypoints
+            magnitude_1: csr_matrix
+                 Magnitude for the 1st octave
+            magnitude_2: csr_matrix
+                 Magnitude for the 2nd octave
+            magnitude_3: csr_matrix
+                 Magnitude for the 3rd octave
+            thetas: csr_matrix
+                Orientation for all keypoints
+            thetas_1: csr_matrix
+                Orientation for the 1st octave
+            thetas_2: csr_matrix
+                Orientation for the 2nd octave
+            thetas_3: csr_matrix
+                Orientation for the 3rd octave
+            appearance: List
+                List of appearances for all keypoints
+            appearance_1: List
+                List of appearances for the 1st octave
+            appearance_2: List
+                List of appearances for the 2nd octave
+            appearance_3: List
+                List of appearances for the 3rd octave
+            keypoints: DataFrame
+                Contain keypoints info with fields:
+                    image_no: Subject name 
+                    keypoint_no: keypoints number
+                    x: x position of the keypoints
+                    y: y position of the keypoints
+                    sigma: Value of sigma
+                    magnitude: Magnitude of the keypoint
+                    orientation: Orientation of the keypoint
+                    appearance_1: First value of appearance
+                    .
+                    .
+                    .
+                    appearance_128: 128th appearance of the keypoints
+    """
     __slots__ = ('n', 'm', 'key', 'images_1oct', 'images_2oct', 'images_3oct', 'sigma', \
                  'neighbors_2D_1', 'neighbors_2D_2', 'neighbors_2D_3', 'gaussian_filter', \
                  'gaussian_1', 'gaussian_2', 'gaussian_3', \
@@ -362,7 +457,7 @@ class SIFT_Implementation():
         return xy_coord, magnitudes, thetas, appearance
 
     def get_keypoints(self):
-        self.xy_coord = np.vstack((self.xy_coord_1, self.xy_coord_2, self.xy_coord_3))
+        self.xy_coord = np.vstack((self.xy_coord_1, self.xy_coord_2*2, self.xy_coord_3*4))
         charar = np.chararray((len(self.xy_coord), 1), itemsize=20)
         charar[:] = self.key
         keypoint_no = np.reshape(np.arange(0,len(self.xy_coord)),(len(self.xy_coord), 1))
