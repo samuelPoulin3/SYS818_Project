@@ -133,7 +133,7 @@ if __name__ == '__main__':
         # cm = (confusion_matrix(np.argmax(clusters_test[key_name],axis=1), np.argmax(clusters_test[key_name],axis=1)))
         # self.plot_confusion_matrix(cm, None, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues)
     
-    plot_roc(clusters_test_labels, clusters_test)
+    #plot_roc(clusters_test_labels, clusters_test)
     index = {}
     new_labels = {}
     weights_labels = {}
@@ -146,16 +146,10 @@ if __name__ == '__main__':
             kmeans_label_indices = index[key][condition]
             kmeans_indices_list = kmeans_label_indices.tolist()
             test_data[key].loc[kmeans_indices_list,'predicted_label'] = clusters_test[list(clusters_test.keys())[i]][kmeans_indices_list]
-            vec_pred_label.append(np.sum(clusters_test[list(clusters_test.keys())[i]][kmeans_indices_list]))
+            vec_pred_label.append(np.argmax(clusters_test[list(clusters_test.keys())[i]][kmeans_indices_list]))
         weights_labels[key] = np.reshape(vec_pred_label,(kmeans.n_clusters,1)) * weights_acc
         new_labels[key] = np.sum(weights_labels[key]) / np.sum(weights_acc)
 
-    #model_clustering = Models_Clustering(kmeans)
-    # import numpy as np
-    # import nibabel as nib
 
-    # converted_array = numpy.array(normal_array, dtype=numpy.float32) # You need to replace normal array by yours
-    # affine = numpy.eye(4)
-    # nifti_file = nibabel.Nifti1Image(converted_array, affine)
-
-    # nibabel.save(nifti_file, path_to_save) # Here you put the path + the extionsion 'nii' or 'nii.gz'
+    if DEBUG:
+        print('\nDone...')

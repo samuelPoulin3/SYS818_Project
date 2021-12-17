@@ -56,7 +56,13 @@ browse file
 Ex: C:\Users\sampo\Python\Projects\virtual_env\SYS818_venv\Scripts\python.exe
 
 # Download data
-
+Go on OASIS website https://www.oasis-brains.org/#data
+Select OASIS-1
+Click on download csv
+Click on download instructions
+Download each disc of raw data in the left column
+Extract all twice
+Put all subjects folder in one folder
 
 # Change path for data
 In src/main.py at line 24-25 change these 2 lines for your own path:
@@ -65,4 +71,6 @@ LABEL_PATH = "C:/Users/sampo/Python/PycharmProjects/SYS818_Project/Data/oasis_cr
 
 DATA_PATH contain all the subjects folder
 LABEL_PATH is the file oasis_cross-sectional.csv that comes with all the subjects
+
+# Run Project
 
