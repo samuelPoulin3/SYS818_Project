@@ -130,8 +130,6 @@ if __name__ == '__main__':
         key_name = 'clusters_' + str(i)
         clusters_test_labels[key_name] = label_test_clusters
         clusters_test[key_name] = np.argmax(clusters[key_name].model.predict(test_data_clusters, verbose=1), axis = 1)
-        # cm = (confusion_matrix(np.argmax(clusters_test[key_name],axis=1), np.argmax(clusters_test[key_name],axis=1)))
-        # self.plot_confusion_matrix(cm, None, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues)
     
     #plot_roc(clusters_test_labels, clusters_test)
     index = {}
